@@ -14,12 +14,13 @@ export async function getUser(name) {
 }
 
 export async function getWinner(req) {
-  return await client.db("guessing-game").collection("user").find({ }).toArray();
+  return await client.db("guessing-game").collection("winner").find(req.query).toArray();
 }
 
-export async function updateUser(name, guess) {
+export async function createWinner(name, guess) {
   return await client
     .db("guessing-game")
-    .collection("user")
-    .updateOne({ name: name }, { $set: { guess: guess } });
+    .collection("winner")
+    .insertOne({  name: name,
+      guess: guess, });
 }

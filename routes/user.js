@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUser, updateUser, getWinner } from "../controller.js";
+import { createUser, getUser, createWinner, getWinner } from "../controller.js";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -40,19 +40,23 @@ router.get("/userdetails/:name", async (req, res) => {
   }
 });
 
-router.post("/userdetails/:name", async (req, res) => {
-  const { name } = req.params;
-  const { guess } = req.body;
+router.post("/winner", async (req, res) => {
+  const { name, guess } = req.body;
   const oldUser = await getUser(name);
 
   if (oldUser) {
-    await updateUser(name, guess);
+    await createWinner(name, guess);
   }
 });
 
-router.get("/userdetails", async (req, res) => {
-  const winner = await getWinner(req);
-  res.send({ data: winner });
+router.get("/winner", async (req, res) => {
+  try {
+    const winner = await getWinner(req);
+
+    res.send(winner);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 export const usersRouter = router;
